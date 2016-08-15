@@ -10,4 +10,5 @@ insert_final_newline = true
 indent_style = tab
 
 [*.json]
-indent_style = tab
+indent_style = space
+indent_size = 3

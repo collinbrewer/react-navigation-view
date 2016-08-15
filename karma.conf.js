@@ -5,7 +5,6 @@ var webpackConfig = require('./webpack.config.js');
 delete webpackConfig.entry;
 webpackConfig.devtool = 'inline-source-map';
 webpackConfig.externals = {
-	'jsdom': 'window',
 	'cheerio': 'window',
 	'react/lib/ExecutionEnvironment': true,
 	'react/lib/ReactContext': 'window'
@@ -27,7 +26,7 @@ module.exports = function (config) {
 
 		// list of files / patterns to load in the browser
 		files: [
-			'node_modules/babel-polyfill/dist/polyfill.js',
+			'./node_modules/babel-polyfill/browser.js',
 			{
 				pattern: 'tests/**',
 				watched: false,
