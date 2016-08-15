@@ -16,7 +16,7 @@ module.exports = {
 	devtool: 'eval',
 	output: {
 		//  path: path.join(__dirname, '/../dist/assets'),
-		path: path.join(__dirname, '/example/src'),
+		path: path.join(__dirname, '/../example/src'),
 		filename: '[name].js'
 		// publicPath: defaultSettings.publicPath
 	},

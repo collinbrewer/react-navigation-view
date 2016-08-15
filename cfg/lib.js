@@ -6,28 +6,33 @@ let baseConfig = require('./base');
 let defaultSettings = require('./defaults');
 
 let config = Object.assign({}, baseConfig, {
-	entry: {
-		index: [
-			'webpack-dev-server/client?http://localhost:' + defaultSettings.port,
-			'webpack/hot/only-dev-server',
-			'./example/src/index.js'
-		]
-		//  ReactNavigationView: ['./src/ReactNavigationView.js']
+	entry: './src/ReactNavigationView.js',
+	output: {
+		path: path.join(__dirname, '/../lib'),
+		filename: 'ReactNavigationView.js',
+		library: 'ReactNavigationView',
+		libraryTarget: 'commonjs'
 	},
+	externals: {
+    'react': {
+      root: 'React',
+      commonjs2: 'react',
+      commonjs: 'react',
+      amd: 'react'
+    }
+ },
 	// cache: true,
-	devtool: 'eval-source-map',
+	devtool: 'source-map',
 	plugins: [
-		new webpack.HotModuleReplacementPlugin()
-		//	new webpack.NoErrorsPlugin()
 	],
 	module: defaultSettings.getDefaultModules()
 });
 
 // Add needed loaders to the defaults here
-config.module.loaders.push({
+config.module.loaders = [{
 	test: /\.(js|jsx)$/,
-	loader: 'react-hot!babel-loader',
+	loader: 'babel',
 	exclude: /node_modules/
-});
+}];
 
 module.exports = config;
