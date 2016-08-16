@@ -5,7 +5,7 @@ The API is modeled largely after react-navigation-controller minus some fusses I
 
 ## Demo & Examples
 
-Live demo: [collinbrewer.github.io/@collinbrewer/react-navigation-view](http://collinbrewer.github.io/@collinbrewer/react-navigation-view/)
+Live demo: [collinbrewer.github.io/react-navigation-view](http://collinbrewer.github.io/react-navigation-view/)
 
 To build the examples locally, run:
 

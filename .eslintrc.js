@@ -1,5 +1,5 @@
 module.exports = {
-	'extends': ['happiness', 'plugin:react/recommended'],
+	'extends': ['happiness'],// 'plugin:react/recommended'],
 	'parser': 'babel-eslint',
 	'env': {
 		'mocha': true

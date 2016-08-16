@@ -10,8 +10,8 @@ let config = Object.assign({}, baseConfig, {
 	output: {
 		path: path.join(__dirname, '/../lib'),
 		filename: 'ReactNavigationView.js',
-		library: 'ReactNavigationView',
-		libraryTarget: 'commonjs'
+		// library: 'ReactNavigationView',
+		libraryTarget: 'commonjs2'
 	},
 	externals: {
     'react': {

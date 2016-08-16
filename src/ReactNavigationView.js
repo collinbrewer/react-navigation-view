@@ -79,12 +79,12 @@ class ReactNavigationView extends React.Component {
 					defaultStyle={{x: startOffset, h: 0}}
 					style={{x: spring(finalOffset), h: spring(height)}}
 					onRest={this.handleMotionRest}>
-						{
-							(value) => {
-								let h = ((index === 0 && numViews === 1) ? 'auto' : value.h);
-								return (
-									<div className="react-navigation-view" style={{overflow: 'hidden', whiteSpace: 'nowrap', height: h}}>
-										<div className="react-navigation-view-slider" style={{marginLeft: -value.x}}>
+					{
+						(value) => {
+							let h = ((index === 0 && numViews === 1) ? 'auto' : value.h);
+							return (
+								<div className="react-navigation-view" style={{overflow: 'hidden', whiteSpace: 'nowrap', height: h}}>
+									<div className="react-navigation-view-slider" style={{transform: 'translateX('+ -value.x + 'px)'}}>
 											{
 												mountedViews.map((view, i) => {
 													let item = (
@@ -95,7 +95,7 @@ class ReactNavigationView extends React.Component {
 
 													if (i === index) {
 														item = (
-															<Measure onMeasure={this.handleMeasureItem}>
+															<Measure onMeasure={this.handleMeasureItem} key={i}>
 																{item}
 															</Measure>
 														);

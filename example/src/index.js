@@ -15,7 +15,7 @@ class App extends React.Component {
 		);
 	}
 
-	handleClickPushRandom = () => {
+	{handleClickPushRandom = () => {
 		this.refs.navigationView.pushView(
 			<div style={{height:40+(400*Math.random())}}>test!</div>
 		);
@@ -23,7 +23,7 @@ class App extends React.Component {
 
 	handleClickPopOne = () => {
 		this.refs.navigationView.popView();
-	}
+	}}
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
