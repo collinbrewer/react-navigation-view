@@ -1,5 +1,5 @@
 module.exports = {
-	'extends': ['happiness'],// 'plugin:react/recommended'],
+	'extends': ['happiness'], //, 'plugin:react/recommended'],
 	'parser': 'babel-eslint',
 	'env': {
 		'mocha': true
@@ -8,6 +8,7 @@ module.exports = {
 		'react'
 	],
 	'rules': {
-		'brace-style': ['error', 'stroustrup', { 'allowSingleLine': true }]
+		'brace-style': [2, 'stroustrup', { 'allowSingleLine': true }],
+		'jsx-quotes': [1, 'prefer-single']
 	}
 };

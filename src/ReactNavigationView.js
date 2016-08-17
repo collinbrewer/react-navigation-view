@@ -8,7 +8,7 @@ class ReactNavigationView extends React.Component {
 		super(props);
 
 		this.state = {
-			views: [],
+			pushedViews: [],
 			viewDimensions: {},
 			itemDimensions: {}
 		};
@@ -17,41 +17,39 @@ class ReactNavigationView extends React.Component {
 	componentWillMount () {
 		if (this.props.defaultViews) {
 			this.setState({
-				views: this.props.defaultViews
+				defaultViews: this.props.defaultViews
 			});
 		}
 	}
 
-  // componentWillReceiveProps (nextProps) {
-  //	if(nextProps.children) {
-  //	 let transition;
-  //	 let newLength = nextProps.children.length;
-  //	 let curLength = this.props.children.length;
-  //
-  //	 if(newLength > curLength) {
-  //		transition = 'push';
-  //	 }
-  //	 else if (newLength < curLength) {
-  //		transition = 'pop';
-  //	 }
-  //
-  //	 this.setState({
-  //		transition: transition
-  //	 });
-  //	}
-  // }
+	componentWillReceiveProps (nextProps) {
+		// if (nextProps.children) {
+		// 	let transition;
+		// 	let newLength = nextProps.children.length;
+		// 	let curLength = this.props.children.length;
+		//
+		// 	if (newLength > curLength) {
+		// 		transition = 'push';
+		// 	}
+		// 	else if (newLength < curLength) {
+		// 		transition = 'pop';
+		// 	}
+		//
+		// 	this.setState({
+		// 	transition: transition
+		// 	});
+		// }
+	}
 
 	render () {
 		let {
 			// transition,
-			views,
 			transitionToIndex,
 			viewDimensions,
 			itemDimensions
 		} = this.state;
-		let {children} = this.props;
-		let mountedViews = [].concat(children || [], views);
-		let numViews = mountedViews.length;
+		let views = this.getViews();
+		let numViews = views.length;
 		let startOffset = 0;
 		let finalOffset;
 		let {width} = viewDimensions;
@@ -83,47 +81,53 @@ class ReactNavigationView extends React.Component {
 						(value) => {
 							let h = ((index === 0 && numViews === 1) ? 'auto' : value.h);
 							return (
-								<div className="react-navigation-view" style={{overflow: 'hidden', whiteSpace: 'nowrap', height: h}}>
-									<div className="react-navigation-view-slider" style={{transform: 'translateX('+ -value.x + 'px)'}}>
-											{
-												mountedViews.map((view, i) => {
-													let item = (
-														<div className="react-navigation-view-item" style={itemStyle} key={i}>
+								<div className='react-navigation-view' style={{overflow: 'hidden', whiteSpace: 'nowrap', height: h}}>
+									<div className='react-navigation-view-slider' style={{transform: 'translateX(' + -value.x + 'px)'}}>
+										{
+											views.map((view, i) => {
+												let item = (
+														<div className='react-navigation-view-item' style={itemStyle} key={i}>
 															{view}
 														</div>
 													);
 
-													if (i === index) {
-														item = (
+												if (i === index) {
+													item = (
 															<Measure onMeasure={this.handleMeasureItem} key={i}>
 																{item}
 															</Measure>
 														);
-													}
+												}
 
-													return item;
-												})
+												return item;
+											})
 											}
 										</div>
 									</div>
 								);
-							}
+						}
 						}
 				</Motion>
 			</Measure>
 		);
 	}
 
+	getViews () {
+		// return [].concat(children || [], this.state.defaultViews);
+		return [].concat(this.props.defaultViews, this.state.pushedViews);
+	}
+
 	pushView (view, options) {
 		options || (options = {});
 		this.setState({
-			views: this.state.views.concat(view),
+			pushedViews: this.state.pushedViews.concat(view),
 			onComplete: options.onComplete
 		});
 	}
 
 	popView (options) {
-		let {views, transitionToIndex} = this.state;
+		let {transitionToIndex} = this.state;
+		let views = this.getViews();
 		let length = Math.max(0, (transitionToIndex === undefined ? views.length : transitionToIndex - 1));
 
 		if (length > 1) {
@@ -131,9 +135,13 @@ class ReactNavigationView extends React.Component {
 		}
 	}
 
+	popToRootView () {
+		this.popToView(this.getViews()[0]);
+	}
+
 	popToView (view, options) {
 		options || (options = {});
-		let index = this.state.views.indexOf(view);
+		let index = this.getViews().indexOf(view);
 
 		if (index !== -1) {
 			this.setState({
@@ -155,8 +163,10 @@ class ReactNavigationView extends React.Component {
 
 		// we finished transitioning, now we can remove the views
 		if (transitionToIndex !== undefined) {
+			let relativeIndex = transitionToIndex - this.props.defaultViews.length;
+
 			this.setState({
-				views: this.state.views.slice(0, transitionToIndex + 1),
+				pushedViews: this.state.pushedViews.slice(0, relativeIndex + 1),
 				transitionToIndex: undefined
 			});
 		}
@@ -174,5 +184,9 @@ class ReactNavigationView extends React.Component {
 		});
 	}
 }
+
+ReactNavigationView.propTypes = {
+	defaultViews: React.PropTypes.array
+};
 
 module.exports = ReactNavigationView;
