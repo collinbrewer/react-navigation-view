@@ -68,7 +68,8 @@ class ReactNavigationView extends React.Component {
 		let itemStyle = {
 			display: 'inline-block',
 			verticalAlign: 'top',
-			width: width + 'px'
+			width: width + 'px',
+			whiteSpace: 'normal'
 		};
 
 		return (

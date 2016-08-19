@@ -69,7 +69,7 @@
     "clean": "rimraf lib",
     "copy": "copyfiles -f ./src/styles/react-navigation-view.css ./lib",
     "build_old": "npm run copy & babel --source-map inline -d lib/ src/",
-    "build": "webpack --env=lib",
+    "build": "npm run copy & webpack --env=lib",
     "build:watch": "webpack --watch --env=lib",
     "examples": "gulp dev:server",
     "lint": "eslint ./src",

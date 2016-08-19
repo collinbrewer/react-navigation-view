@@ -1,6 +1,6 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var ReactNavigationView = require('../../src/ReactNavigationView.js');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ReactNavigationView from '../../src/ReactNavigationView.js';
 
 class App extends React.Component {
 	render () {
@@ -9,7 +9,7 @@ class App extends React.Component {
 		];
 		return (
 			<div style={{margin: 'auto', width: '296px', border: '1px solid grey', marginBottom: '24px'}}>
-				<ReactNavigationView ref="navigationView" defaultViews={rootViews} />
+				<ReactNavigationView ref='navigationView' defaultViews={rootViews} />
 				<button onClick={this.handleClickPopOne}>pop one</button><button onClick={this.handleClickPushRandom}>push random</button>
 			</div>
 		);
