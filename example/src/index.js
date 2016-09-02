@@ -8,7 +8,7 @@ class App extends React.Component {
 			<div>test</div>
 		];
 		return (
-			<div style={{margin: 'auto', width: '296px', border: '1px solid grey', marginBottom: '24px'}}>
+			<div style={{margin: 'auto', maxWidth: '296px', border: '1px solid grey', marginBottom: '24px'}}>
 				<ReactNavigationView ref='navigationView' defaultViews={rootViews} />
 				<button onClick={this.handleClickPopOne}>pop one</button><button onClick={this.handleClickPushRandom}>push random</button>
 			</div>

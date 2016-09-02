@@ -56,6 +56,8 @@ class ReactNavigationView extends React.Component {
 		let {height} = itemDimensions;
 		let index = (transitionToIndex === undefined ? (numViews - 1) : transitionToIndex);
 
+		console.assert(numViews > 0, 'Must have at least one view');
+
 		// if (transition === 'push') {
 		// 	startOffset = ((index - 1) * width);
 		// }
@@ -68,9 +70,11 @@ class ReactNavigationView extends React.Component {
 		let itemStyle = {
 			display: 'inline-block',
 			verticalAlign: 'top',
-			width: width + 'px',
+			width: (!isNaN(width) ? width + 'px' : 'auto'),
 			whiteSpace: 'normal'
 		};
+
+		height = (isNaN(height) ? 'auto' : height);
 
 		return (
 			<Measure onMeasure={this.handleMeasureView}>

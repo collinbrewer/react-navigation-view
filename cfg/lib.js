@@ -1,7 +1,6 @@
 'use strict';
 
 let path = require('path');
-let webpack = require('webpack');
 let baseConfig = require('./base');
 let defaultSettings = require('./defaults');
 
@@ -10,21 +9,19 @@ let config = Object.assign({}, baseConfig, {
 	output: {
 		path: path.join(__dirname, '/../lib'),
 		filename: 'ReactNavigationView.js',
-		// library: 'ReactNavigationView',
 		libraryTarget: 'commonjs2'
 	},
 	externals: {
-    'react': {
-      root: 'React',
-      commonjs2: 'react',
-      commonjs: 'react',
-      amd: 'react'
-    }
- },
+		'react': {
+			root: 'React',
+			commonjs2: 'react',
+			commonjs: 'react',
+			amd: 'react'
+		}
+	},
 	// cache: true,
 	devtool: 'source-map',
-	plugins: [
-	],
+	plugins: [],
 	module: defaultSettings.getDefaultModules()
 });
 

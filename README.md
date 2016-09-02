@@ -22,8 +22,6 @@ npm install @collinbrewer/react-navigation-view -S
 
 ## Usage
 
-__EXPLAIN USAGE HERE__
-
 ```js
 var ReactNavigationView = require('@collinbrewer/react-navigation-view');
 
