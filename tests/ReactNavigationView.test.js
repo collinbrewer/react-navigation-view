@@ -15,15 +15,6 @@ describe.only('ReactNavigationView', function () {
 		});
 	});
 
-	context('#componentWillMount', () => {
-		it('should store the defaultViews in state', () => {
-			let defaultViews = [];
-			let wrapper = shallow(<ReactNavigationView defaultViews={defaultViews} />);
-
-			expect(wrapper.instance().state.views).to.equal(defaultViews);
-		});
-	});
-
 	context.skip('#componentWillReceiveProps', () => {
 		it('should set transition state to push for more', () => {
 			// let wrapper = shallow(<ReactNavigationView />);

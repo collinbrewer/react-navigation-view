@@ -7,7 +7,8 @@ webpackConfig.devtool = 'inline-source-map';
 webpackConfig.externals = {
 	'cheerio': 'window',
 	'react/lib/ExecutionEnvironment': true,
-	'react/lib/ReactContext': 'window'
+	'react/lib/ReactContext': 'window',
+	'react/addons': true
 };
 
 module.exports = function (config) {
@@ -46,18 +47,13 @@ module.exports = function (config) {
 		// optionally, configure the reporter
 		coverageReporter: {
 			dir: 'coverage',
-			reporters: [{
-				type: 'lcov',
-				subdir: '.'
-			}, {
-				type: 'text-summary'
-			}, {
-				type: 'text'
-			}, {
-				type: 'cobertura',
-				subdir: '.',
-				file: 'coverage.xml'
-			}]
+			reporters: [
+				{type: 'lcov', subdir: '.'},
+				{type: 'html', subdir: '.'},
+				{type: 'text-summary'},
+				{type: 'text'},
+				{type: 'cobertura', subdir: '.', file: 'coverage.xml'}
+			]
 		},
 
 		reporters: ['mocha'], // ['mocha', 'coverage'], // possible values: 'dots', 'progress'

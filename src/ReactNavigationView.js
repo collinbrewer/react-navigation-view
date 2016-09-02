@@ -14,14 +14,6 @@ class ReactNavigationView extends React.Component {
 		};
 	}
 
-	componentWillMount () {
-		if (this.props.defaultViews) {
-			this.setState({
-				defaultViews: this.props.defaultViews
-			});
-		}
-	}
-
 	componentWillReceiveProps (nextProps) {
 		// if (nextProps.children) {
 		// 	let transition;
@@ -55,6 +47,12 @@ class ReactNavigationView extends React.Component {
 		let {width} = viewDimensions;
 		let {height} = itemDimensions;
 		let index = (transitionToIndex === undefined ? (numViews - 1) : transitionToIndex);
+		let renderedViews = views.map((view) => {
+			if (typeof view === 'function') {
+				view = view();
+			}
+			return view;
+		});
 
 		console.assert(numViews > 0, 'Must have at least one view');
 
@@ -89,7 +87,7 @@ class ReactNavigationView extends React.Component {
 								<div className='react-navigation-view' style={{overflow: 'hidden', whiteSpace: 'nowrap', height: h}}>
 									<div className='react-navigation-view-slider' style={{transform: 'translateX(' + -value.x + 'px)'}}>
 										{
-											views.map((view, i) => {
+											renderedViews.map((view, i) => {
 												let item = (
 														<div className='react-navigation-view-item' style={itemStyle} key={i}>
 															{view}
@@ -118,10 +116,24 @@ class ReactNavigationView extends React.Component {
 	}
 
 	getViews () {
-		// return [].concat(children || [], this.state.defaultViews);
-		return [].concat(this.props.defaultViews, this.state.pushedViews);
+		let views;
+
+		if (this.props.defaultViews) {
+			views = [].concat(this.props.defaultViews, this.state.pushedViews);
+		}
+		else {
+			views = [].concat(this.props.children);
+		}
+
+		return views;
 	}
 
+	/**
+	 * Pushes a new item on to the navigation stack
+	 * @param	[mixed]		view						A react component, or a function that returns a react component
+	 * @param	[object]		options					Options for the push
+	 * @param	[function]	options.onComplete	A function called when the push is complete
+	 */
 	pushView (view, options) {
 		options || (options = {});
 		this.setState({

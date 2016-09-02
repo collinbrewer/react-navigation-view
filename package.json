@@ -82,7 +82,8 @@
     "serve:lib": "node server.js --env=lib",
     "start": "npm run serve",
     "test": "karma start --single-run",
-    "test:watch": "karma start"
+    "test:watch": "karma start",
+    "test:cov": "karma start --single-run --reporters coverage"
   },
   "keywords": [
     "react",
