@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ReactNavigationView from '../../src/ReactNavigationView.js';
+import ReactNavigationView from '../../src/ReactNavigationView.js'; // eslint-disable-line
 
-class App extends React.Component {
+class App extends React.Component { // eslint-disable-line
 
 	constructor (props) {
 		super(props);
@@ -26,7 +26,7 @@ class App extends React.Component {
 		return (
 			<div style={{margin: 'auto', maxWidth: '296px', border: '1px solid grey', marginBottom: '24px'}}>
 				<button onClick={this.handleClickPopAll}>pop all</button><button onClick={this.handleClickPopOne}>pop one</button><button onClick={this.handleClickPushRandom}>push random</button>
-				<ReactNavigationView ref='navigationView1' defaultViews={rootViews} />
+				<ReactNavigationView ref='navigationView1' defaultViews={[rootViews]} />
 
 				<ReactNavigationView>
 					{childrenViews}

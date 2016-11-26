@@ -89,27 +89,27 @@ class ReactNavigationView extends React.Component {
 										{
 											renderedViews.map((view, i) => {
 												let item = (
-														<div className='react-navigation-view-item' style={itemStyle} key={i}>
-															{view}
-														</div>
-													);
+													<div className='react-navigation-view-item' style={itemStyle} key={i}>
+														{view}
+													</div>
+												);
 
 												if (i === index) {
 													item = (
-															<Measure onMeasure={this.handleMeasureItem} key={i}>
-																{item}
-															</Measure>
-														);
+														<Measure onMeasure={this.handleMeasureItem} key={i}>
+															{item}
+														</Measure>
+													);
 												}
 
 												return item;
 											})
-											}
-										</div>
+										}
 									</div>
-								);
+								</div>
+							);
 						}
-						}
+					}
 				</Motion>
 			</Measure>
 		);

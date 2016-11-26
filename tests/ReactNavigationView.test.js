@@ -1,9 +1,9 @@
+import React from 'react'; // eslint-disable-line
 import {expect} from 'chai';
-import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {mount} from 'enzyme';
 
 describe.only('ReactNavigationView', function () {
-	var ReactNavigationView = require('../src/ReactNavigationView.js');
+	var ReactNavigationView = require('../src/ReactNavigationView.js'); // eslint-disable-line
 
 	context('#render', () => {
 		it('renders initial views', function () {
