@@ -73,6 +73,60 @@ class ReactNavigationView extends React.Component {
 		return (transitionToIndex === undefined ? (numViews - 1) : transitionToIndex);
 	}
 
+	getViews () {
+		let views;
+
+		if (this.props.defaultViews) {
+			views = [].concat(this.props.defaultViews, this.state.pushedViews);
+		}
+		else {
+			views = [].concat(this.props.children);
+		}
+
+		return views;
+	}
+
+	/**
+	 * Pushes a new item on to the navigation stack
+	 * @param	[mixed]		view						A react component, or a function that returns a react component
+	 * @param	[object]		options					Options for the push
+	 * @param	[function]	options.onComplete	A function called when the push is complete
+	 */
+	pushView (view, options) {
+		options || (options = {});
+		this.onComplete = options.onComplete;
+		this.setState({
+			pushedViews: this.state.pushedViews.concat(view)
+		});
+	}
+
+	popView (options) {
+		const { transitionToIndex } = this.state;
+		const views = this.getViews();
+		const length = Math.max(0, (transitionToIndex === undefined ? views.length : transitionToIndex - 1));
+
+		if (length > 1) {
+			this.popToView(views[length - 2], options);
+		}
+	}
+
+	popToRootView () {
+		this.popToView(this.getViews()[0]);
+	}
+
+	popToView (view, options = {}) {
+		const index = this.getViews().indexOf(view);
+
+		console.log('popping to view index', index);
+
+		if (index !== -1) {
+			this.setState({
+				transitionToIndex: index
+			});
+			this.onComplete = options.onComplete;
+		}
+	}
+
 	renderView = (view, i) => {
 		const { viewDimensions } = this.state;
 		const index = this.getIndex();
@@ -168,58 +222,6 @@ class ReactNavigationView extends React.Component {
 				{this.renderMotion}
 			</Measure>
 		);
-	}
-
-	getViews () {
-		let views;
-
-		if (this.props.defaultViews) {
-			views = [].concat(this.props.defaultViews, this.state.pushedViews);
-		}
-		else {
-			views = [].concat(this.props.children);
-		}
-
-		return views;
-	}
-
-	/**
-	 * Pushes a new item on to the navigation stack
-	 * @param	[mixed]		view						A react component, or a function that returns a react component
-	 * @param	[object]		options					Options for the push
-	 * @param	[function]	options.onComplete	A function called when the push is complete
-	 */
-	pushView (view, options) {
-		options || (options = {});
-		this.onComplete = options.onComplete;
-		this.setState({
-			pushedViews: this.state.pushedViews.concat(view)
-		});
-	}
-
-	popView (options) {
-		const {transitionToIndex} = this.state;
-		const views = this.getViews();
-		const length = Math.max(0, (transitionToIndex === undefined ? views.length : transitionToIndex - 1));
-
-		if (length > 1) {
-			this.popToView(views[length - 2], options);
-		}
-	}
-
-	popToRootView () {
-		this.popToView(this.getViews()[0]);
-	}
-
-	popToView (view, options = {}) {
-		const index = this.getViews().indexOf(view);
-
-		if (index !== -1) {
-			this.setState({
-				transitionToIndex: index
-			});
-			this.onComplete = options.onComplete;
-		}
 	}
 }
 
