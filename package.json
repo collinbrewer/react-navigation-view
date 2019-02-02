@@ -1,6 +1,6 @@
 {
   "name": "@collinbrewer/react-navigation-view",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "React Navigation View",
   "main": "lib/ReactNavigationView.js",
   "author": "Collin Brewer <collin@brewer-collective.com>",
