@@ -117,8 +117,6 @@ class ReactNavigationView extends React.Component {
 	popToView (view, options = {}) {
 		const index = this.getViews().indexOf(view);
 
-		console.log('popping to view index', index);
-
 		if (index !== -1) {
 			this.setState({
 				transitionToIndex: index
