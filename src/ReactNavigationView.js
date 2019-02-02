@@ -67,7 +67,7 @@ class ReactNavigationView extends React.Component {
 	}
 
 	getIndex () {
-		const { transitionToIndex } = this.props;
+		const { transitionToIndex } = this.state;
 		const numViews = this.getViews().length;
 
 		return (transitionToIndex === undefined ? (numViews - 1) : transitionToIndex);
