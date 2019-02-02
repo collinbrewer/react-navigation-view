@@ -1,5 +1,6 @@
 import React from 'react';
-import {Motion, spring} from 'react-motion';
+import PropTypes from 'prop-types';
+import { Motion, spring } from 'react-motion';
 import Measure from 'react-measure';
 
 class ReactNavigationView extends React.Component {
@@ -33,86 +34,43 @@ class ReactNavigationView extends React.Component {
 		// }
 	}
 
-	render () {
-		let {
-			// transition,
-			transitionToIndex,
-			viewDimensions,
-			itemDimensions
-		} = this.state;
-		let views = this.getViews();
-		let numViews = views.length;
-		let startOffset = 0;
-		let finalOffset;
-		let {width} = viewDimensions;
-		let {height} = itemDimensions;
-		let index = (transitionToIndex === undefined ? (numViews - 1) : transitionToIndex);
-		let renderedViews = views.map((view) => {
-			if (typeof view === 'function') {
-				view = view();
-			}
-			return view;
+	handleMotionRest = () => {
+		const { onComplete } = this;
+		let { transitionToIndex } = this.state;
+
+		if (onComplete) {
+			onComplete();
+			this.onComplete = undefined;
+		}
+
+		// we finished transitioning, now we can remove the views
+		if (transitionToIndex !== undefined) {
+			let relativeIndex = transitionToIndex - this.props.defaultViews.length;
+
+			this.setState({
+				pushedViews: this.state.pushedViews.slice(0, relativeIndex + 1),
+				transitionToIndex: undefined
+			});
+		}
+	}
+
+	handleResizeView = (contentRect) => {
+		this.setState({
+			viewDimensions: contentRect.bounds
 		});
+	}
 
-		console.assert(numViews > 0, 'Must have at least one view');
+	handleResizeItem = (contentRect) => {
+		this.setState({
+			itemDimensions: contentRect.bounds
+		});
+	}
 
-		// if (transition === 'push') {
-		// 	startOffset = ((index - 1) * width);
-		// }
-		// else if (transition === 'pop') {
-		// 	startOffset = ((index + 1) * width);
-		// }
+	getIndex () {
+		const { transitionToIndex } = this.state;
+		const numViews = this.getViews().length;
 
-		finalOffset = (index * width);
-
-		let itemStyle = {
-			display: 'inline-block',
-			verticalAlign: 'top',
-			width: (!isNaN(width) ? width + 'px' : 'auto'),
-			whiteSpace: 'normal'
-		};
-
-		height = (isNaN(height) ? 'auto' : height);
-
-		return (
-			<Measure onMeasure={this.handleMeasureView}>
-				<Motion
-					defaultStyle={{x: startOffset, h: 0}}
-					style={{x: spring(finalOffset), h: spring(height)}}
-					onRest={this.handleMotionRest}>
-					{
-						(value) => {
-							let h = ((index === 0 && numViews === 1) ? 'auto' : value.h);
-							return (
-								<div className='react-navigation-view' style={{overflow: 'hidden', whiteSpace: 'nowrap', height: h}}>
-									<div className='react-navigation-view-slider' style={{transform: 'translateX(' + -value.x + 'px)'}}>
-										{
-											renderedViews.map((view, i) => {
-												let item = (
-													<div className='react-navigation-view-item' style={itemStyle} key={i}>
-														{view}
-													</div>
-												);
-
-												if (i === index) {
-													item = (
-														<Measure onMeasure={this.handleMeasureItem} key={i}>
-															{item}
-														</Measure>
-													);
-												}
-
-												return item;
-											})
-										}
-									</div>
-								</div>
-							);
-						}
-					}
-				</Motion>
-			</Measure>
-		);
+		return (transitionToIndex === undefined ? (numViews - 1) : transitionToIndex);
 	}
 
 	getViews () {
@@ -136,16 +94,16 @@ class ReactNavigationView extends React.Component {
 	 */
 	pushView (view, options) {
 		options || (options = {});
+		this.onComplete = options.onComplete;
 		this.setState({
-			pushedViews: this.state.pushedViews.concat(view),
-			onComplete: options.onComplete
+			pushedViews: this.state.pushedViews.concat(view)
 		});
 	}
 
 	popView (options) {
-		let {transitionToIndex} = this.state;
-		let views = this.getViews();
-		let length = Math.max(0, (transitionToIndex === undefined ? views.length : transitionToIndex - 1));
+		const { transitionToIndex } = this.state;
+		const views = this.getViews();
+		const length = Math.max(0, (transitionToIndex === undefined ? views.length : transitionToIndex - 1));
 
 		if (length > 1) {
 			this.popToView(views[length - 2], options);
@@ -156,54 +114,117 @@ class ReactNavigationView extends React.Component {
 		this.popToView(this.getViews()[0]);
 	}
 
-	popToView (view, options) {
-		options || (options = {});
-		let index = this.getViews().indexOf(view);
+	popToView (view, options = {}) {
+		const index = this.getViews().indexOf(view);
 
 		if (index !== -1) {
 			this.setState({
-				onComplete: options.onComplete,
 				transitionToIndex: index
 			});
+			this.onComplete = options.onComplete;
 		}
 	}
 
-	handleMotionRest = () => {
-		let {onComplete, transitionToIndex} = this.state;
+	renderView = (view, i) => {
+		const { viewDimensions } = this.state;
+		const index = this.getIndex();
+		const { width } = viewDimensions;
+		const itemStyle = {
+			display: 'inline-block',
+			verticalAlign: 'top',
+			width: (isNaN(width) ? 'auto' : `${width}px`),
+			whiteSpace: 'normal'
+		};
+		const renderedView = (typeof view === 'function' ? view() : view);
 
-		if (onComplete) {
-			onComplete();
-			this.setState({
-				onComplete: undefined
-			});
+		if (i === index) {
+			return (
+				<Measure bounds onResize={this.handleResizeItem} key={i}>
+					{
+						({ measureRef }) => {
+							return (
+								<div ref={measureRef} className='react-navigation-view-item' style={itemStyle}>
+									{renderedView}
+								</div>
+							);
+						}
+					}
+				</Measure>
+			);
 		}
 
-		// we finished transitioning, now we can remove the views
-		if (transitionToIndex !== undefined) {
-			let relativeIndex = transitionToIndex - this.props.defaultViews.length;
+		return (
+			<div className='react-navigation-view-item' style={itemStyle} key={i}>
+				{renderedView}
+			</div>
+		);
+	}
 
-			this.setState({
-				pushedViews: this.state.pushedViews.slice(0, relativeIndex + 1),
-				transitionToIndex: undefined
-			});
+	renderMotionFrame = (frame, measureRef) => {
+		const index = this.getIndex();
+		const views = this.getViews();
+		const numViews = views.length;
+		const h = ((index === 0 && numViews === 1) ? 'auto' : frame.h);
+
+		console.assert(numViews > 0, 'Must have at least one view');
+
+		return (
+			<div className='react-navigation-view' style={{overflow: 'hidden', whiteSpace: 'nowrap', height: h}} ref={measureRef}>
+				<div className='react-navigation-view-slider' style={{transform: 'translateX(' + -frame.x + 'px)'}}>
+					{views.map(this.renderView)}
+				</div>
+			</div>
+		);
+	}
+
+	renderMotion = ({ measureRef }) => {
+		const {
+			// transition,
+			viewDimensions,
+			itemDimensions
+		} = this.state;
+		const startOffset = 0;
+		const { width } = viewDimensions;
+		const { height } = itemDimensions;
+
+		// if (transition === 'push') {
+		// 	startOffset = ((index - 1) * width);
+		// }
+		// else if (transition === 'pop') {
+		// 	startOffset = ((index + 1) * width);
+		// }
+
+		// height = (isNaN(height) ? 'auto' : height);
+
+		if (isNaN(width) || isNaN(height)) {
+			return this.renderMotionFrame({ x: 0, height: 'auto' }, measureRef);
 		}
+
+		const index = this.getIndex();
+		const finalOffset = (index * width);
+
+		return (
+			<Motion
+				defaultStyle={{x: startOffset, h: 0}}
+				style={{ x: spring(finalOffset), h: spring(height) }}
+				onRest={this.handleMotionRest}
+			>
+				{(f) => this.renderMotionFrame(f, measureRef)}
+			</Motion>
+		);
 	}
 
-	handleMeasureView = (dimensions) => {
-		this.setState({
-			viewDimensions: dimensions
-		});
-	}
-
-	handleMeasureItem = (dimensions) => {
-		this.setState({
-			itemDimensions: dimensions
-		});
+	render () {
+		return (
+			<Measure bounds onResize={this.handleResizeView}>
+				{this.renderMotion}
+			</Measure>
+		);
 	}
 }
 
 ReactNavigationView.propTypes = {
-	defaultViews: React.PropTypes.array
+	defaultViews: PropTypes.array
 };
 
 module.exports = ReactNavigationView;

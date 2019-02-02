@@ -26,7 +26,7 @@ let config = Object.assign({}, baseConfig, {
 // Add needed loaders to the defaults here
 config.module.loaders.push({
 	test: /\.(js|jsx)$/,
-	loader: 'react-hot!babel-loader',
+	loader: 'babel-loader',
 	exclude: /node_modules/
 });
 
