@@ -14,7 +14,7 @@ class App extends React.Component { // eslint-disable-line
 
 	render () {
 		let rootViews = [
-			<div>test</div>
+			<div key='test1'>test</div>
 		];
 
 		let childrenViews = [
