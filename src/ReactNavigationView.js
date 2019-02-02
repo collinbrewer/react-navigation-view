@@ -34,6 +34,38 @@ class ReactNavigationView extends React.Component {
 		// }
 	}
 
+	handleMotionRest = () => {
+		const { onComplete } = this;
+		let { transitionToIndex } = this.state;
+
+		if (onComplete) {
+			onComplete();
+			this.onComplete = undefined;
+		}
+
+		// we finished transitioning, now we can remove the views
+		if (transitionToIndex !== undefined) {
+			let relativeIndex = transitionToIndex - this.props.defaultViews.length;
+
+			this.setState({
+				pushedViews: this.state.pushedViews.slice(0, relativeIndex + 1),
+				transitionToIndex: undefined
+			});
+		}
+	}
+
+	handleResizeView = (contentRect) => {
+		this.setState({
+			viewDimensions: contentRect.bounds
+		});
+	}
+
+	handleResizeItem = (contentRect) => {
+		this.setState({
+			itemDimensions: contentRect.bounds
+		});
+	}
+
 	getIndex () {
 		const { transitionToIndex } = this.props;
 		const numViews = this.getViews().length;
@@ -99,9 +131,9 @@ class ReactNavigationView extends React.Component {
 			viewDimensions,
 			itemDimensions
 		} = this.state;
-		let startOffset = 0;
-		let { width } = viewDimensions;
-		let { height } = itemDimensions;
+		const startOffset = 0;
+		const { width } = viewDimensions;
+		const { height } = itemDimensions;
 
 		// if (transition === 'push') {
 		// 	startOffset = ((index - 1) * width);
@@ -145,7 +177,7 @@ class ReactNavigationView extends React.Component {
 			views = [].concat(this.props.defaultViews, this.state.pushedViews);
 		}
 		else {
-			views = [].concat(() => this.props.children);
+			views = [].concat(this.props.children);
 		}
 
 		return views;
@@ -166,9 +198,9 @@ class ReactNavigationView extends React.Component {
 	}
 
 	popView (options) {
-		let {transitionToIndex} = this.state;
-		let views = this.getViews();
-		let length = Math.max(0, (transitionToIndex === undefined ? views.length : transitionToIndex - 1));
+		const {transitionToIndex} = this.state;
+		const views = this.getViews();
+		const length = Math.max(0, (transitionToIndex === undefined ? views.length : transitionToIndex - 1));
 
 		if (length > 1) {
 			this.popToView(views[length - 2], options);
@@ -179,9 +211,8 @@ class ReactNavigationView extends React.Component {
 		this.popToView(this.getViews()[0]);
 	}
 
-	popToView (view, options) {
-		options || (options = {});
-		let index = this.getViews().indexOf(view);
+	popToView (view, options = {}) {
+		const index = this.getViews().indexOf(view);
 
 		if (index !== -1) {
 			this.setState({
@@ -189,38 +220,6 @@ class ReactNavigationView extends React.Component {
 			});
 			this.onComplete = options.onComplete;
 		}
-	}
-
-	handleMotionRest = () => {
-		const { onComplete } = this;
-		let { transitionToIndex } = this.state;
-
-		if (onComplete) {
-			onComplete();
-			this.onComplete = undefined;
-		}
-
-		// we finished transitioning, now we can remove the views
-		if (transitionToIndex !== undefined) {
-			let relativeIndex = transitionToIndex - this.props.defaultViews.length;
-
-			this.setState({
-				pushedViews: this.state.pushedViews.slice(0, relativeIndex + 1),
-				transitionToIndex: undefined
-			});
-		}
-	}
-
-	handleResizeView = (contentRect) => {
-		this.setState({
-			viewDimensions: contentRect.bounds
-		});
-	}
-
-	handleResizeItem = (contentRect) => {
-		this.setState({
-			itemDimensions: contentRect.bounds
-		});
 	}
 }
 
